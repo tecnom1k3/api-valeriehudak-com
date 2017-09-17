@@ -3,9 +3,24 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Acme\Service\Jwt;
 
 class CsrfController extends Controller
 {
+    /**
+     * @var Jwt
+     */
+    protected $jwtService;
+
+    /**
+     * CsrfController constructor.
+     * @param Jwt $jwtService
+     */
+    public function __construct(Jwt $jwtService)
+    {
+        $this->jwtService = $jwtService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -15,9 +30,8 @@ class CsrfController extends Controller
     public function index(Request $request)
     {
         return response()->json([
-            'csrf' => '90as8d0s'
-        ])
-            ->withCallback($request->input('callback'));
+            'csrf' => $this->jwtService->get(),
+        ])->withCallback($request->input('callback'));
     }
 
     /**
