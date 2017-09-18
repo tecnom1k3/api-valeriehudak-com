@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Acme\Service\Jwt;
+use Acme\Service\ReCaptcha;
 
 class FormRequestModel extends FormRequest
 {
@@ -15,11 +16,19 @@ class FormRequestModel extends FormRequest
     public function authorize()
     {
         $token = $this->request->get('token');
+        $captcha = $this->request->get('g-recaptcha-response');
 
         /** @var Jwt $jwtService */
         $jwtService = App()->make(Jwt::class);
 
-        return $jwtService->validate($token);
+        /** @var ReCaptcha $captchaService */
+        $captchaService = App()->make(ReCaptcha::class);
+
+        if ($jwtService->validate($token)) {
+            return $captchaService->validate($captcha);
+        }
+
+        return false;
     }
 
     /**

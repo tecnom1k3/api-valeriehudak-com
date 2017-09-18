@@ -179,6 +179,7 @@ return [
         Barryvdh\Cors\ServiceProvider::class,
         App\Providers\JwtServiceProvider::class,
         App\Providers\FormHandlerServiceProvider::class,
+        App\Providers\ReCaptchaServiceProvider::class,
 
     ],
 
