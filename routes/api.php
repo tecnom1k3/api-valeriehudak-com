@@ -18,3 +18,4 @@ use Illuminate\Http\Request;
 //});
 
 Route::resource('csrf', 'CsrfController', ['only' => ['index']]);
+Route::resource('form', 'FormController', ['only' => ['store']]);

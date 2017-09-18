@@ -4,6 +4,8 @@ namespace Acme\Service;
 
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\BaseSigner;
+use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\ValidationData;
 
 class Jwt
 {
@@ -22,6 +24,18 @@ class Jwt
      * @var string
      */
     protected $key;
+
+    /**
+     * @var ValidationData
+     */
+    protected $validationData;
+
+    public function __construct(ValidationData $validationData)
+    {
+        $this->validationData = $validationData;
+        $this->validationData->setIssuer(getenv('JWT_ISS'));
+        $this->validationData->setAudience(getenv('JWT_ISS'));
+    }
 
     /**
      * @param BaseSigner $signer
@@ -59,7 +73,25 @@ class Jwt
      */
     public function get(): string
     {
-        $id = base64_encode(
+
+        $token = $this->builder->setIssuer(getenv('JWT_ISS'))// Configures the issuer (iss claim)
+        ->setAudience(getenv('JWT_ISS'))// Configures the audience (aud claim)
+        ->setId($this->generateId(), true)// Configures the id (jti claim), replicating as a header item
+        ->setIssuedAt(time())// Configures the time that the token was issue (iat claim)
+        ->setNotBefore(time())// Configures the time that the token can be used (nbf claim)
+        ->setExpiration(time() + intval(getenv('JWT_EXPIRATION')))// Configures the expiration time of the token (exp claim)
+        ->sign($this->signer, $this->key)
+        ->getToken(); // Retrieves the generated token
+
+        return (string)$token;
+    }
+
+    /**
+     * @return string
+     */
+    protected function generateId(): string
+    {
+        return base64_encode(
             hash(
                 'sha256',
                 uniqid(
@@ -69,16 +101,20 @@ class Jwt
                 true
             )
         );
+    }
 
-        $token = $this->builder->setIssuer(getenv('JWT_ISS'))// Configures the issuer (iss claim)
-        ->setAudience(getenv('JWT_ISS'))// Configures the audience (aud claim)
-        ->setId($id, true)// Configures the id (jti claim), replicating as a header item
-        ->setIssuedAt(time())// Configures the time that the token was issue (iat claim)
-        ->setNotBefore(time())// Configures the time that the token can be used (nbf claim)
-        ->setExpiration(time() + intval(getenv('JWT_EXPIRATION')))// Configures the expiration time of the token (exp claim)
-        ->sign($this->signer, $this->key)
-        ->getToken(); // Retrieves the generated token
+    /**
+     * @param $jwt
+     * @return bool
+     */
+    public function validate($jwt): bool
+    {
+        $token = (new Parser())->parse($jwt);
+        if( $token->verify($this->signer, $this->key))
+        {
+            return $token->validate($this->validationData);
+        }
 
-        return (string)$token;
+        return false;
     }
 }

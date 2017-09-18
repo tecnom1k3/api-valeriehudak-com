@@ -178,6 +178,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Barryvdh\Cors\ServiceProvider::class,
         App\Providers\JwtServiceProvider::class,
+        App\Providers\FormHandlerServiceProvider::class,
 
     ],
 
