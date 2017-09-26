@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\FormRequestModel;
 use Acme\Service\FormHandler;
+use Acme\Dto\FormProcessRequest;
 
 class FormController extends Controller
 {
@@ -46,8 +47,21 @@ class FormController extends Controller
      */
     public function store(FormRequestModel $request)
     {
-        return response()->json($request->toArray())->withCallback($request->input('callback'));
+        return response()->json([
+            'success' => $this->formHandlerService->processForm($this->marshalFormRequest($request)),
+        ])->withCallback($request->input('callback'));
 
+    }
+
+    protected function marshalFormRequest(FormRequestModel $requestModel): FormProcessRequest
+    {
+        /** @var FormProcessRequest $formProcessRequest */
+        $formProcessRequest = App()->make(FormProcessRequest::class);
+        $formProcessRequest->setName($requestModel->get('name'))
+            ->setEmail($requestModel->get('email'))
+            ->setComments($requestModel->get('comments'));
+
+        return $formProcessRequest;
     }
 
     /**
