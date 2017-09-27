@@ -118,10 +118,10 @@ common:
       option_name: document_root
       value: /public
     - namespace: aws:elasticbeanstalk:sns:topics
-      option_name: NotificationEndpoint
+      option_name: Notification Endpoint
       value: "miguel@digitec.ws"
     - namespace: aws:elasticbeanstalk:sns:topics
-      option_name: NotificationProtocol
+      option_name: Notification Protocol
       value: "email"
 
 
@@ -140,7 +140,13 @@ common:
   #    capabilities => An array. You need set it to ['CAPABILITY_IAM'] if the
   # template include IAM Instance Profile.
   resources:
-
+    template: config/aws_resources.json
+    capabilities:
+      - CAPABILITY_IAM
+    outputs:
+      InstanceProfile:
+        namespace: aws:autoscaling:launchconfiguration
+        option_name: IamInstanceProfile
     # For example creating a RDS instance for blue green deployment(check jruby-rails4
     # sample project which has a working example):
     # template: config/my_rds.json
