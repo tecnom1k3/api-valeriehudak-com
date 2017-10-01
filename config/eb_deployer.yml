@@ -77,7 +77,7 @@ common:
   # Defining a smoke test is highly recommended for serious usage. By default we use
   # The simplest one that just be checking server landing page using curl, e.g.
   smoke_test: |
-    curl_http_code = "curl -s -o /dev/null -w \"%{http_code}\" http://#{host_name}"
+    curl_http_code = "curl -s -o /dev/null -w \"%{http_code}\" http://#{host_name}/api/healthCheck"
     Timeout.timeout(600) do
       until ['200', '301', '302'].include?(`#{curl_http_code}`.strip)
         sleep 5
@@ -123,6 +123,9 @@ common:
     - namespace: aws:elasticbeanstalk:sns:topics
       option_name: Notification Protocol
       value: "email"
+    - namespace: aws:elasticbeanstalk:application
+      option_name: Application Healthcheck URL
+      value: "/api/healthCheck"
 
 
   # If resources specified, eb_deployer will use the CloudFormation
