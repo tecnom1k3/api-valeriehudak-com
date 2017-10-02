@@ -51,7 +51,7 @@ common:
   # and deleted from the S3 source bucket as well. If specified as zero or not
   # specified, all versions will be kept.  If a version_prefix is given, only removes
   # version starting with the prefix.
-  keep_latest: 5
+  keep_latest: 2
 
   # Specifies a prefix to prepend to the version label.
   # This can be useful if you want to use different binaries for different
@@ -183,6 +183,9 @@ environments:
       - namespace: aws:elasticbeanstalk:environment
         option_name: EnvironmentType
         value: "SingleInstance"
+      - namespace: aws:elasticbeanstalk:application:environment
+        option_name: APP_ENVIRONMENT
+        value: dev
   production:
     option_settings:
       # example for overriding common option_settings: providing least redundancy

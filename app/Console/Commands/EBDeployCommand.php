@@ -19,7 +19,7 @@ class EBDeployCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'eb:deploy';
+    protected $signature = 'eb:deploy {environment=dev}';
 
     /**
      * The console command description.
@@ -103,7 +103,7 @@ class EBDeployCommand extends Command
                 '-p',
                 $this->getAppArchiveName(),
                 '-e',
-                'dev',
+                $this->argument('environment'),
             ])->setTimeout(self::EB_DEPLOYER_PROCESS_TIMEOUT)
             ->getProcess();
 
