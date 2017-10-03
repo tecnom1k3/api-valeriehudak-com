@@ -26,3 +26,6 @@ jobs:
       - run: sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
       - run: aws s3 cp s3://api.valeriehudak-com.config/env.dev ./.env
       - run: ./vendor/bin/phpunit
+      - deploy:
+        command: |
+          ./artisan eb:deploy
