@@ -10,17 +10,7 @@ jobs:
       - run: sudo apt-get install -y ruby-full
       - run: sudo gem install eb_deployer
       - run: sudo composer self-update
-#      - restore_cache:
-#          keys:
-#            - composer-v1-{{ checksum "composer.json" }}
-#            - composer-v1-
       - run: composer install -n --prefer-dist
-#      - save_cache:
-#          key: composer-v1-{{ checksum "composer.json" }}
-#          paths:
-#            - vendor
-#      - run: touch storage/testing.sqlite
-#      - run: php artisan migrate --env=testing --database=sqlite_testing --force
       - run: curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
       - run: unzip awscli-bundle.zip
       - run: sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
@@ -30,4 +20,6 @@ jobs:
           command: |
             if [ "${CIRCLE_BRANCH}" == "develop" ]; then
               ./artisan eb:deploy
+            else
+              echo "Not develop branch so not deploying"
             fi
