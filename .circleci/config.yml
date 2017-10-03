@@ -20,5 +20,8 @@ jobs:
 #            - vendor
 #      - run: touch storage/testing.sqlite
 #      - run: php artisan migrate --env=testing --database=sqlite_testing --force
+      - run: curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
+      - run: unzip awscli-bundle.zip
+      - run: sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
       - run: aws s3 cp s3://api.valeriehudak-com.config/env.dev ./.env
       - run: ./vendor/bin/phpunit
