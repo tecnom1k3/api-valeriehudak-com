@@ -7,8 +7,19 @@ jobs:
     working_directory: ~/laravel
     steps:
       - checkout
-#      - run: sudo apt install -y libsqlite3-dev
-      - run: gem install eb_deployer
+      - run: sudo apt-get update
+      - run: sudo apt install -y zlib1g-dev build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev python-software-properties libffi-dev nodejs
+      - run: git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+      - run: echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
+      - run: echo 'eval "$(rbenv init -)"' >> ~/.bashrc
+      - run: exec $SHELL
+      - run: git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+      - run: echo 'export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"' >> ~/.bashrc
+      - run: exec $SHELL
+      - run: rbenv install 2.4.2
+      - run: rbenv global 2.4.2
+      - run: ruby -v
+#      - run: gem install eb_deployer
       - run: sudo composer self-update
 #      - restore_cache:
 #          keys:
