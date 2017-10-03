@@ -17,6 +17,7 @@ jobs:
       - run: aws s3 cp s3://api.valeriehudak-com.config/env.dev ./.env
       - run: ./vendor/bin/phpunit
       - deploy:
+          name: EB Deployer
           command: |
             if [ "${CIRCLE_BRANCH}" == "develop" ]; then
               ./artisan eb:deploy
