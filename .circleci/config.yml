@@ -8,6 +8,7 @@ jobs:
     steps:
       - checkout
 #      - run: sudo apt install -y libsqlite3-dev
+      - run: gem install eb_deployer
       - run: sudo composer self-update
 #      - restore_cache:
 #          keys:
