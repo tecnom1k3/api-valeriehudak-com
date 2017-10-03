@@ -4,20 +4,16 @@ jobs:
   build:
     docker:
       - image: circleci/php:7.1.8-browsers
-      - image: ruby:2.3.1
     working_directory: ~/laravel
     steps:
       - checkout
-      - run: sudo apt-get update
-      - run: sudo apt install -y zlib1g-dev build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev python-software-properties libffi-dev nodejs
-      - run: git clone https://github.com/rbenv/rbenv.git ~/.rbenv
-      - run: echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
-      - run: echo 'eval "$(rbenv init -)"' >> ~/.bashrc
-      - run: git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
-      - run: echo 'export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"' >> ~/.bashrc
-      - run: rbenv install 2.4.2
-      - run: rbenv global 2.4.2
-      - run: ruby -v
+      - run: wget http://ftp.ruby-lang.org/pub/ruby/2.4/ruby-2.4.2.tar.gz
+      - run: tar -xzvf ruby-2.4.2.tar.gz
+      - run: cd ruby-2.4.2/
+      - run: ./configure
+      - run: make
+      - run: sudo make install
+      - run: cd ..
 #      - run: gem install eb_deployer
       - run: sudo composer self-update
 #      - restore_cache:
