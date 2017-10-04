@@ -10,7 +10,7 @@ jobs:
       - run:
           name: Install EB_Deployer
           command: |
-            sudo apt-get install -y ruby-full & sudo gem install eb_deployer
+            sudo apt-get install -y ruby-full ; sudo gem install eb_deployer
 #      - run: sudo apt-get install -y ruby-full
 #      - run: sudo gem install eb_deployer
       - run: sudo composer self-update
