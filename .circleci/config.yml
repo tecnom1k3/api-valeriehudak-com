@@ -1,0 +1,47 @@
+version: 2
+
+jobs:
+  build:
+    docker:
+      - image: circleci/php:7.1.8-browsers
+    working_directory: ~/laravel
+    steps:
+      - checkout
+      - run:
+          name: Install EB_Deployer
+          command: |
+            sudo apt-get install -y ruby-full ; sudo gem install eb_deployer
+      - run: sudo composer self-update
+      - restore_cache:
+          keys:
+            - composer-{{ checksum "composer.lock" }}
+      - run: composer install -n --prefer-dist
+      - save_cache:
+          key: composer-{{ checksum "composer.lock" }}
+          paths:
+            - vendor
+      - run:
+          name: install awscli and copy config from amazon s3
+          command: |
+            curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
+            unzip awscli-bundle.zip
+            sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
+            aws s3 cp s3://api.valeriehudak-com.config/env.dev ./.env
+      - run:
+          name: PHPUnit
+          command: |
+            mkdir -p ~/phpunit
+            ./vendor/bin/phpunit --log-junit ~/phpunit/junit.xml tests
+          when: always
+      - store_test_results:
+          path: ~/phpunit
+      - store_artifacts:
+          path: ~/phpunit
+      - deploy:
+          name: EB Deployer
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "develop" ]; then
+              ./artisan eb:deploy
+            else
+              echo "Not develop branch so not deploying"
+            fi
