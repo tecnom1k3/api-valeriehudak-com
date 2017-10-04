@@ -37,7 +37,6 @@ jobs:
           path: ~/phpunit
       - store_artifacts:
           path: ~/phpunit
-#      - run: ./vendor/bin/phpunit
       - deploy:
           name: EB Deployer
           command: |
