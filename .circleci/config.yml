@@ -10,7 +10,14 @@ jobs:
       - run: sudo apt-get install -y ruby-full
       - run: sudo gem install eb_deployer
       - run: sudo composer self-update
+      - restore_cache:
+          keys:
+            - composer-{{ checksum "composer.lock" }}
       - run: composer install -n --prefer-dist
+      - save_cache:
+          key: composer-{{ checksum "composer.lock" }}
+          paths:
+            - vendor
       - run: curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
       - run: unzip awscli-bundle.zip
       - run: sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
@@ -24,9 +31,3 @@ jobs:
             else
               echo "Not develop branch so not deploying"
             fi
-  deployment:
-    docker:
-      - image: circleci/php:7.1.8-browsers
-      working_directory: ~/laravel
-      steps:
-        - checkout
