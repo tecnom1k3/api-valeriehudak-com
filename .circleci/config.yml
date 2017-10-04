@@ -27,11 +27,17 @@ jobs:
             unzip awscli-bundle.zip
             sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
             aws s3 cp s3://api.valeriehudak-com.config/env.dev ./.env
-#      - run: curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
-#      - run: unzip awscli-bundle.zip
-#      - run: sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
-#      - run: aws s3 cp s3://api.valeriehudak-com.config/env.dev ./.env
-      - run: ./vendor/bin/phpunit
+      - run:
+          name: PHPUnit
+          command: |
+            mkdir -p ~/phpunit
+            ./vendor/bin/phpunit --log-junit ~/phpunit/junit.xml tests
+          when: always
+      - store_test_results:
+          path: ~/phpunit
+      - store_artifacts:
+          path: ~/phpunit
+#      - run: ./vendor/bin/phpunit
       - deploy:
           name: EB Deployer
           command: |
