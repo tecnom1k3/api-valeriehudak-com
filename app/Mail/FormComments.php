@@ -8,7 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Acme\Dto\FormProcessRequest;
 
-class FormComments extends Mailable
+class FormComments extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 

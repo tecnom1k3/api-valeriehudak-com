@@ -169,7 +169,6 @@ environments:
   dev:
     # example for overriding common settings
     strategy: inplace-update
-    phoenix_mode: off
     option_settings:
       - namespace: aws:autoscaling:launchconfiguration
         option_name: EC2KeyName
