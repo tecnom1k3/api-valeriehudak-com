@@ -120,4 +120,11 @@ return [
         ],
     ],
 
+    'address' => [
+        'comments' => [
+            'main' => env('MAIL_COMMENTS_TO_ADDRESS'),
+            'bcc'  => env('MAIL_COMMENTS_BCC_ADDRESS'),
+        ],
+    ],
+
 ];

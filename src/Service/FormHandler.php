@@ -10,7 +10,8 @@ class FormHandler
 
     public function processForm(FormProcessRequest $request)
     {
-        Mail::to(getenv('MAIL_COMMENTS_TO_ADDRESS'))
+        Mail::to(config('mail.address.comments.main'))
+            ->bcc(config('mail.address.comments.bcc'))
             ->send(new FormCommentsEmail($request));
         return true;
     }

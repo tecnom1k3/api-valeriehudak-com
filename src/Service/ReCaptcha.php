@@ -27,8 +27,8 @@ class ReCaptcha
             self::VERIFY_URL,
             [
                 'form_params' => [
-                    'secret' => getenv('CAPTCHA_SECRET'),
-                    'response' => $token
+                    'secret' => config('captcha.secret'),
+                    'response' => $token,
                 ],
             ]
         );
@@ -37,5 +37,4 @@ class ReCaptcha
 
         return $responseData->success === true;
     }
-
 }

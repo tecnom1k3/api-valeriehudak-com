@@ -9,6 +9,12 @@ use Lcobucci\JWT\ValidationData;
 
 class Jwt
 {
+    const CONFIG_JWT_ISSUER     = 'jwt.issuer';
+    const CONFIG_JWT_AUDIENCE   = 'jwt.audience';
+    const CONFIG_JWT_EXPIRATION = 'jwt.expiration';
+    const HASH_ALGO             = 'sha256';
+    const ID_NUM_BYTES          = 32;
+    const ID_MORE_ENTROPY       = true;
 
     /**
      * @var \Lcobucci\JWT\Signer\BaseSigner
@@ -33,8 +39,8 @@ class Jwt
     public function __construct(ValidationData $validationData)
     {
         $this->validationData = $validationData;
-        $this->validationData->setIssuer(getenv('JWT_ISS'));
-        $this->validationData->setAudience(getenv('JWT_ISS'));
+        $this->validationData->setIssuer(config(self::CONFIG_JWT_ISSUER));
+        $this->validationData->setAudience(config(self::CONFIG_JWT_AUDIENCE));
     }
 
     /**
@@ -73,17 +79,28 @@ class Jwt
      */
     public function get(): string
     {
+        $currentTime = time();
+        $expiration = $this->getExpirationTimeStamp($currentTime);
 
-        $token = $this->builder->setIssuer(getenv('JWT_ISS'))// Configures the issuer (iss claim)
-        ->setAudience(getenv('JWT_ISS'))// Configures the audience (aud claim)
-        ->setId($this->generateId(), true)// Configures the id (jti claim), replicating as a header item
-        ->setIssuedAt(time())// Configures the time that the token was issue (iat claim)
-        ->setNotBefore(time())// Configures the time that the token can be used (nbf claim)
-        ->setExpiration(time() + intval(getenv('JWT_EXPIRATION')))// Configures the expiration time of the token (exp claim)
+        $token = $this->builder->setIssuer($this->validationData->get('iss'))
+        ->setAudience($this->validationData->get('aud'))
+        ->setId($this->generateId(), true)
+        ->setIssuedAt($currentTime)
+        ->setNotBefore($currentTime)
+        ->setExpiration($expiration)
         ->sign($this->signer, $this->key)
-        ->getToken(); // Retrieves the generated token
+        ->getToken();
 
         return (string)$token;
+    }
+
+    /**
+     * @param int $timeStamp
+     * @return int
+     */
+    protected function getExpirationTimeStamp(int $timeStamp): int
+    {
+        return $timeStamp + intval(config(self::CONFIG_JWT_EXPIRATION));
     }
 
     /**
@@ -93,10 +110,10 @@ class Jwt
     {
         return base64_encode(
             hash(
-                'sha256',
+                self::HASH_ALGO,
                 uniqid(
-                    random_bytes(16),
-                    true
+                    random_bytes(self::ID_NUM_BYTES),
+                    self::ID_MORE_ENTROPY
                 ),
                 true
             )

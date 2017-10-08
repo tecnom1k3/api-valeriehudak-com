@@ -135,6 +135,6 @@ class EBDeployCommand extends Command
      */
     protected function getAppArchiveName()
     {
-        return getenv('EB_APP_FOLDER_NAME') . DIRECTORY_SEPARATOR . getenv('EB_APP_ARCHIVE_NAME');
+        return config('eb.folder') . DIRECTORY_SEPARATOR . config('eb.file');
     }
 }

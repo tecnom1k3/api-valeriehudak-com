@@ -21,7 +21,7 @@ class JwtServiceProvider extends ServiceProvider
     {
         $jwtService->setBuilder($this->app->make(Builder::class))
             ->setSigner($this->app->make(Sha256::class))
-            ->setKey(base64_decode(getenv('JWT_SECRET')));
+            ->setKey(base64_decode(config('jwt.secret')));
     }
 
     /**
