@@ -15,19 +15,17 @@ class FormRequestModel extends FormRequest
      */
     public function authorize()
     {
-        $token = $this->request->get('token');
+        $token   = $this->request->get('token');
         $captcha = $this->request->get('g-recaptcha-response');
 
-        /** @var Jwt $jwtService */
-        $jwtService = App()->make(Jwt::class);
-
-        /** @var ReCaptcha $captchaService */
-        $captchaService = App()->make(ReCaptcha::class);
-
-        if ($jwtService->validate($token)) {
-            return $captchaService->validate($captcha);
+        if ($token && $captcha) {
+            /** @var Jwt $jwtService */
+            $jwtService     = App()->make(Jwt::class);
+            /** @var ReCaptcha $captchaService */
+            $captchaService = App()->make(ReCaptcha::class);
+            
+            return $jwtService->validate($token) && $captchaService->validate($captcha);
         }
-
         return false;
     }
 
@@ -39,11 +37,11 @@ class FormRequestModel extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
-            'email' => 'required',
-            'comments' => 'required',
-            'token' => 'required',
-            'g-recaptcha-response' => 'required',
+            'name'                 => 'required|min:5|string',
+            'email'                => 'required|email',
+            'comments'             => 'required|min:10|string',
+            'token'                => 'required|string|min:250',
+            'g-recaptcha-response' => 'required|string|min:400',
         ];
     }
 }
