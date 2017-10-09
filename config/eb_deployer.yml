@@ -181,7 +181,7 @@ environments:
         value: "1"
       - namespace: aws:elasticbeanstalk:environment
         option_name: EnvironmentType
-        value: "SingleInstance"
+        value: "LoadBalanced"
       - namespace: aws:elasticbeanstalk:application:environment
         option_name: APP_ENVIRONMENT
         value: dev
