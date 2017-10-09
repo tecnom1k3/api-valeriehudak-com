@@ -13,9 +13,14 @@ return [
     */
    
     'supportsCredentials' => false,
-    'allowedOrigins' => ['*'],
+    'allowedOrigins' => [
+        'valeriehudak.com'
+    ],
     'allowedHeaders' => ['*'],
-    'allowedMethods' => ['*'],
+    'allowedMethods' => [
+        'GET',
+        'POST',
+    ],
     'exposedHeaders' => [],
     'maxAge' => 0,
 
