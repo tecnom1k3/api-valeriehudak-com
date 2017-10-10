@@ -1,7 +1,7 @@
 version: 2
 
 jobs:
-  composer:
+  build:
     docker:
       - image: circleci/php:7.1.8-browsers
     working_directory: ~/laravel
@@ -20,11 +20,6 @@ jobs:
           key: composer-{{ checksum "composer.lock" }}
           paths:
             - vendor
-  awscli:
-    docker:
-      - image: circleci/php:7.1.8-browsers
-    working_directory: ~/laravel
-    steps:
       - run:
           name: install awscli and copy config from amazon s3
           command: |
@@ -32,11 +27,6 @@ jobs:
             unzip awscli-bundle.zip
             sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
             aws s3 cp s3://api.valeriehudak-com.config/env.dev ./.env
-  tests:
-    docker:
-      - image: circleci/php:7.1.8-browsers
-    working_directory: ~/laravel
-    steps:
       - run:
           name: PHPUnit
           command: |
@@ -62,11 +52,6 @@ jobs:
 #            fi
 workflows:
   version: 2
-  build_and_test:
+  build_test_deploy:
     jobs:
-      - composer
-      - awscli
-      - tests:
-          requires:
-            - composer
-            - awscli
+      - build
