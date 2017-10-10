@@ -3,14 +3,14 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/php:7.1.8-browsers
+      - image: circleci/php:7.1-fpm
     working_directory: ~/laravel
     steps:
       - checkout
-#      - run:
-#          name: Install EB_Deployer
-#          command: |
-#            sudo apt-get install -y ruby-full ; sudo gem install eb_deployer
+      - run:
+          name: Install EB_Deployer
+          command: |
+            sudo apt-get install -y ruby-full ; sudo gem install eb_deployer
       - run: sudo composer self-update
       - restore_cache:
           keys:
@@ -37,21 +37,39 @@ jobs:
           path: ~/phpunit
       - store_artifacts:
           path: ~/phpunit
-#      - deploy:
-#          name: EB Deployer
-#          command: |
-#            if [ "${CIRCLE_BRANCH}" == "develop" ]; then
-#              ./artisan eb:deploy dev
-#            else
-#              echo "Not develop branch so not deploying"
-#            fi
-#            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-#              ./artisan eb:deploy prod
-#            else
-#              echo "Not master   branch so not deploying"
-#            fi
+  deployment:
+    docker:
+      - image: circleci/ruby:2.3
+    working_directory: ~/laravel
+    steps:
+      - checkout
+      - run:
+          name: Install EB_Deployer
+          command: |
+            sudo gem install eb_deployer
+      - deploy:
+          name: EB Deployer
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "develop" ]; then
+              ./artisan eb:deploy dev
+            else
+              echo "Not develop branch so not deploying"
+            fi
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              ./artisan eb:deploy prod
+            else
+              echo "Not master   branch so not deploying"
+            fi
 workflows:
   version: 2
   build_test_deploy:
     jobs:
       - build
+      - deployment:
+          filters:
+            branches:
+              only:
+                - develop
+                - master
+          requires:
+            - build
