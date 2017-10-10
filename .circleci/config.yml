@@ -35,34 +35,26 @@ jobs:
           path: ~/phpunit
   deployment:
     docker:
-      - image: circleci/php:7.1-cli
+      - image: circleci/ruby:2.3
     working_directory: ~/laravel
     steps:
       - checkout
-      - run: sudo composer self-update
-      - restore_cache:
-          keys:
-            - composer-{{ checksum "composer.lock" }}
-      - run: composer install -n --prefer-dist
-      - save_cache:
-          key: composer-{{ checksum "composer.lock" }}
-          paths:
-            - vendor
       - run:
           name: Install EB_Deployer
           command: |
-            sudo apt-get install -y ruby-full
             sudo gem install eb_deployer
       - deploy:
           name: EB Deployer
           command: |
+            mkdir dist
+            git ls-files | zip dist/app.zip -@
             if [ "${CIRCLE_BRANCH}" == "develop" ]; then
-              ./artisan eb:deploy dev
+              eb_deploy -p dist/app.zip -e dev
             else
               echo "Not develop branch so not deploying"
             fi
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              ./artisan eb:deploy prod
+              eb_deploy -p dist/app.zip -e prod
             else
               echo "Not master branch so not deploying"
             fi
