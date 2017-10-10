@@ -22,7 +22,7 @@ common:
   # deploy. Inplace-update will save resources but will suffer from downtime.
   # (All old environments need be destroyed when you switching between strategies.)
   # Default strategy is 'blue-green'.
-  strategy: inplace-update
+  strategy: blue-green
 
   # Name of s3 bucket where uploaded application packages will be stored.
   # Note that the string ".packages" will be added as a suffix to your bucket.
@@ -185,8 +185,20 @@ environments:
       - namespace: aws:elasticbeanstalk:application:environment
         option_name: APP_ENVIRONMENT
         value: dev
-  production:
+  prod:
     option_settings:
+      - namespace: aws:autoscaling:asg
+        option_name: MinSize
+        value: "1"
+      - namespace: aws:autoscaling:asg
+        option_name: MaxSize
+        value: "1"
+      - namespace: aws:elasticbeanstalk:environment
+        option_name: EnvironmentType
+        value: "LoadBalanced"
+      - namespace: aws:elasticbeanstalk:application:environment
+        option_name: APP_ENVIRONMENT
+        value: prod
       # example for overriding common option_settings: providing least redundancy
       # in production environment.
       # - namespace: aws:autoscaling:asg
