@@ -35,13 +35,14 @@ jobs:
           path: ~/phpunit
   deployment:
     docker:
-      - image: circleci/ruby:2.3
+      - image: circleci/php:7.1-cli
     working_directory: ~/laravel
     steps:
       - checkout
       - run:
           name: Install EB_Deployer
           command: |
+            sudo apt-get install -y ruby-full
             sudo gem install eb_deployer
       - deploy:
           name: EB Deployer
@@ -54,7 +55,7 @@ jobs:
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               ./artisan eb:deploy prod
             else
-              echo "Not master   branch so not deploying"
+              echo "Not master branch so not deploying"
             fi
 workflows:
   version: 2
