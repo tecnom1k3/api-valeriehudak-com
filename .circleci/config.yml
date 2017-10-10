@@ -46,7 +46,6 @@ jobs:
       - deploy:
           name: EB Deployer
           command: |
-            mkdir dist
             git ls-files | zip dist/app.zip -@
             if [ "${CIRCLE_BRANCH}" == "develop" ]; then
               eb_deploy -p dist/app.zip -e dev
