@@ -39,6 +39,15 @@ jobs:
     working_directory: ~/laravel
     steps:
       - checkout
+      - run: sudo composer self-update
+      - restore_cache:
+          keys:
+            - composer-{{ checksum "composer.lock" }}
+      - run: composer install -n --prefer-dist
+      - save_cache:
+          key: composer-{{ checksum "composer.lock" }}
+          paths:
+            - vendor
       - run:
           name: Install EB_Deployer
           command: |
