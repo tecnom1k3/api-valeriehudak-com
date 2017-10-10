@@ -7,10 +7,6 @@ jobs:
     working_directory: ~/laravel
     steps:
       - checkout
-      - run:
-          name: Install EB_Deployer
-          command: |
-            sudo apt-get install -y ruby-full ; sudo gem install eb_deployer
       - run: sudo composer self-update
       - restore_cache:
           keys:
@@ -66,10 +62,10 @@ workflows:
     jobs:
       - build
       - deployment:
-          filters:
-            branches:
-              only:
-                - develop
-                - master
+#          filters:
+#            branches:
+#              only:
+#                - develop
+#                - master
           requires:
             - build
