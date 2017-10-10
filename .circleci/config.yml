@@ -69,4 +69,4 @@ workflows:
       - tests:
           requires:
             - composer
-            - awsclie
+            - awscli
