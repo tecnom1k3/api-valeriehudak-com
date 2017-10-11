@@ -14,7 +14,9 @@ return [
    
     'supportsCredentials' => false,
     'allowedOrigins' => [
-        'valeriehudak.com'
+        'awesome.dev:8080',
+        'stage.valeriehudak.com',
+        'valeriehudak.com',
     ],
     'allowedHeaders' => ['*'],
     'allowedMethods' => [
