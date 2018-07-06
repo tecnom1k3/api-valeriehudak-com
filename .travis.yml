@@ -1,10 +1,11 @@
 language: node_js
-before_install:
-  - npm install -g serverless
+node_js:
+  - node
 
-install:
+script:
+  - npm install -g serverless
   - npm install
-  - serverless deploy  --stage dev -v
+  - sls deploy
 
 branches:
   only:
