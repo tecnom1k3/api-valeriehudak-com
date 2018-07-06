@@ -2,3 +2,4 @@
 /.idea
 /.serverless
 .env
+.DS_Store

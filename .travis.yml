@@ -1,0 +1,16 @@
+language: node_js
+before_install:
+  - npm install -g serverless
+
+install:
+  - npm install
+  - serverless deploy  --stage dev -v
+
+branches:
+  only:
+    - develop
+    - serverless-reset
+
+cache:
+  directories:
+    - "node_modules"
