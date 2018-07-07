@@ -5,6 +5,8 @@ node_js:
 script:
   - npm install -g serverless
   - npm install
+  - pip install --user awscli
+  - aws s3 cp s3://dot-env/api.valeriehudak.com-env.dev .env
   - sls deploy
 
 branches:
