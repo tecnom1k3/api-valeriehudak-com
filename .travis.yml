@@ -14,7 +14,6 @@ script:
 branches:
   only:
     - develop
-    - serverless-reset
 
 cache:
   directories:
