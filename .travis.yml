@@ -3,7 +3,6 @@ node_js:
   - node
 
 install:
-  - sudo pip install --upgrade pip
   - pip install --user awscli
 
 script:
