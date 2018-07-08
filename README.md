@@ -27,8 +27,5 @@ curl -X GET https://dev-api.YOURDOMAIN.com
 ```
 
 ## TODO
-* do not hardcode domain name in serverless.yml
-* integrate **travisci** 
-* handle form fields and google recaptcha
+* handle form fields **and** google recaptcha
 * make `modules/form.js` agnostic of SES
-* remove AWS credentials from `.env` file, and use AWS IAM or other mechanism
