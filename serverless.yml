@@ -5,6 +5,12 @@ provider:
   runtime: nodejs6.10
   stage: ${opt:stage, 'dev'}
   region: us-east-1
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - 'ses:*'
+      Resource:
+        - '*'
 
 functions:
   app:
@@ -19,11 +25,12 @@ plugins:
 custom:
   stage: ${opt:stage, self:provider.stage}
   domains:
-    prod: api.valeriehudak.com
-    dev: dev-api.valeriehudak.com
+    baseDomain: valeriehudak.com
+    prod: api.${self:custom.domains.baseDomain}
+    dev: dev-api.${self:custom.domains.baseDomain}
   customDomain:
     domainName: ${self:custom.domains.${self:custom.stage}}
-    certificateName: '*.valeriehudak.com'
+    certificateName: '*.${self:custom.domains.baseDomain}'
     basePath: ''
     stage: ${self:provider.stage}
     createRoute53Record: true
