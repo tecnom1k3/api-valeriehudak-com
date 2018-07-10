@@ -5,16 +5,63 @@ const awsModule = require('./aws');
 const sesModule = (function (awsModule) {
 
     const sesApiVersion = '2010-12-01';
-    const aws = awsModule.getAws();
-    const ses = new aws.SES({apiVersion: sesApiVersion});
+    const awsClient = awsModule.getAws();
+    const sesClient = new awsClient.SES({apiVersion: sesApiVersion});
+
+    let params = {
+        Destination: {
+            ToAddresses: [
+            ]
+        },
+        Message: {
+            Body: {
+                // Html: {
+                //     Charset: "UTF-8",
+                //     Data: "HTML_FORMAT_BODY"
+                // },
+                Text: {
+                    Charset: "UTF-8",
+                    Data: ""
+                }
+            },
+            Subject: {
+                Charset: 'UTF-8',
+                Data: ''
+            }
+        },
+        Source: '', /* required */
+        ReplyToAddresses: [
+        ],
+    };
 
     /**
      *
-     * @param params
+     * @param from
+     * @param to
+     * @param subject
+     * @param message
+     * @returns {{Destination: {ToAddresses: Array}, Message: {Body: {Text: {Charset: string, Data: string}}, Subject: {Charset: string, Data: string}}, Source: string, ReplyToAddresses: Array}}
+     */
+    const getParams = function (from, to, subject, message) {
+        params.Destination.ToAddresses = [to];
+        params.Source = from;
+        params.ReplyToAddresses = [from];
+        params.Message.Subject.Data = subject;
+        params.Message.Body.Text.Data = message;
+        return params;
+    };
+
+    /**
+     *
+     * @param fromAddress
+     * @param toAddress
+     * @param subject
+     * @param message
      * @returns {Promise<PromiseResult<SES.SendEmailResponse, AWSError>>}
      */
-    const send = (params) => ses.sendEmail(params)
-        .promise();
+    const send = (fromAddress, toAddress, subject, message) => sesClient.sendEmail(
+        getParams(fromAddress, toAddress, subject, message)
+    ).promise();
 
     return {
         send: send

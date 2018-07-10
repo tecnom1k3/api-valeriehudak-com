@@ -28,4 +28,6 @@ curl -X GET https://dev-api.YOURDOMAIN.com
 
 ## TODO
 * handle form fields **and** google recaptcha
-* make `modules/form.js` agnostic of SES
+* use view for email body
+* check SSM https://serverless.com/blog/serverless-secrets-api-keys/  https://hackernoon.com/you-should-use-ssm-parameter-store-over-lambda-env-variables-5197fc6ea45b
+* error handling
