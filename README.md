@@ -34,7 +34,6 @@ curl -X GET https://dev-api.YOURDOMAIN.com
 ```
 
 ## TODO
+* use view for email body (plain text and html)
 * handle form fields **and** google recaptcha
-* use view for email body
-* check SSM https://serverless.com/blog/serverless-secrets-api-keys/  https://hackernoon.com/you-should-use-ssm-parameter-store-over-lambda-env-variables-5197fc6ea45b
 * error handling
