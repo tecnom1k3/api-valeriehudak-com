@@ -6,13 +6,10 @@ const senderModule = (function (ses) {
 
     /**
      *
-     * @param to
-     * @param from
-     * @param subject
-     * @param body
+     * @param parameters
      * @returns {*}
      */
-    const sendForm = (to, from, subject, body) => ses.send(from, to, subject, body);
+    const sendForm = (parameters) => ses.send(parameters);
 
     return {
         sendForm: sendForm

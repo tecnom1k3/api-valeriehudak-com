@@ -53,14 +53,11 @@ const sesModule = (function (awsModule) {
 
     /**
      *
-     * @param fromAddress
-     * @param toAddress
-     * @param subject
-     * @param message
+     * @param params
      * @returns {Promise<PromiseResult<SES.SendEmailResponse, AWSError>>}
      */
-    const send = (fromAddress, toAddress, subject, message) => sesClient.sendEmail(
-        getParams(fromAddress, toAddress, subject, message)
+    const send = (params) => sesClient.sendEmail(
+        getParams(params.from, params.to, params.subject, params.message)
     ).promise();
 
     return {
