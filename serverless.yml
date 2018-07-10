@@ -18,6 +18,10 @@ functions:
     events:
       - http: ANY /
       - http: 'ANY {proxy+}'
+    environment:
+      TO_ADDRESS: ${ssm:/api.${self:custom.domains.baseDomain}/environment/${opt:stage, self:provider.stage}/toAddress}
+      FROM_ADDRESS: ${ssm:/api.${self:custom.domains.baseDomain}/environment/${opt:stage, self:provider.stage}/fromAddress}
+      MAIL_SUBJECT: ${ssm:/api.${self:custom.domains.baseDomain}/environment/${opt:stage, self:provider.stage}/mailSubject}
 
 plugins:
   - serverless-domain-manager
