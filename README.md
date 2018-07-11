@@ -34,6 +34,5 @@ curl -X GET https://dev-api.YOURDOMAIN.com
 ```
 
 ## TODO
-* use view for email body (plain text and html)
-* handle form fields **and** google recaptcha
+* handle google recaptcha (https://www.npmjs.com/package/express-recaptcha)
 * error handling

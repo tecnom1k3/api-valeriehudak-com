@@ -10,24 +10,26 @@ const formModule = (function (sender, templateTexts, parameters) {
     const fromAddress = process.env.FROM_ADDRESS;
     const subject = process.env.MAIL_SUBJECT;
 
-    const getData = (message) => ({
-        messageBody: message
+    const getTemplateParameters = (requestBody) => ({
+        messageBody: requestBody.message,
+        from: requestBody.from,
+        name: requestBody.name
     });
 
     /**
      *
-     * @param message
+     * @param requestBody
      * @returns {*}
      */
-    const sendForm = function (message) {
+    const sendForm = function (requestBody) {
 
-        let data = getData(message);
+        let templateParameters = getTemplateParameters(requestBody);
 
         parameters.setFrom(fromAddress)
             .setTo(toAddress)
             .setSubject(subject)
-            .setTxtMessage(templateTexts.getTextTemplate(data))
-            .setHtmlMessage(templateTexts.getHtmlTemplate(data));
+            .setTxtMessage(templateTexts.getTextTemplate(templateParameters))
+            .setHtmlMessage(templateTexts.getHtmlTemplate(templateParameters));
 
         return sender.sendForm(parameters.getParams());
     };
