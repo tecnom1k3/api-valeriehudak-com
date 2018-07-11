@@ -1,3 +1,4 @@
 You received a new message!
 
+From: <%= name %> <<%= from %>>
 Message: <%= messageBody %>

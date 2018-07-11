@@ -5,7 +5,7 @@ const formModule = require('./../modules/form');
 const router = express.Router();
 
 router.post('/', function (req, res, next) {
-    formModule.sendForm(req.body.message).then((data) => {
+    formModule.sendForm(req.body).then((data) => {
         res.json({
             "messageId": data.MessageId
         });
