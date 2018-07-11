@@ -15,10 +15,10 @@ const sesModule = (function (awsModule) {
         },
         Message: {
             Body: {
-                // Html: {
-                //     Charset: "UTF-8",
-                //     Data: "HTML_FORMAT_BODY"
-                // },
+                Html: {
+                    Charset: "UTF-8",
+                    Data: ""
+                },
                 Text: {
                     Charset: "UTF-8",
                     Data: ""
@@ -40,14 +40,16 @@ const sesModule = (function (awsModule) {
      * @param to
      * @param subject
      * @param message
-     * @returns {{Destination: {ToAddresses: Array}, Message: {Body: {Text: {Charset: string, Data: string}}, Subject: {Charset: string, Data: string}}, Source: string, ReplyToAddresses: Array}}
+     * @param htmlMessage
+     * @returns {{Destination: {ToAddresses: Array}, Message: {Body: {Html: {Charset: string, Data: string}, Text: {Charset: string, Data: string}}, Subject: {Charset: string, Data: string}}, Source: string, ReplyToAddresses: Array}}
      */
-    const getParams = function (from, to, subject, message) {
+    const getParams = function (from, to, subject, message, htmlMessage) {
         params.Destination.ToAddresses = [to];
         params.Source = from;
         params.ReplyToAddresses = [from];
         params.Message.Subject.Data = subject;
         params.Message.Body.Text.Data = message;
+        params.Message.Body.Html.Data = htmlMessage;
         return params;
     };
 
@@ -57,7 +59,7 @@ const sesModule = (function (awsModule) {
      * @returns {Promise<PromiseResult<SES.SendEmailResponse, AWSError>>}
      */
     const send = (params) => sesClient.sendEmail(
-        getParams(params.from, params.to, params.subject, params.message)
+        getParams(params.from, params.to, params.subject, params.message, params.messageHtml)
     ).promise();
 
     return {

@@ -4,7 +4,8 @@ const parametersModule = (function () {
     let _from;
     let _to;
     let _subject;
-    let _message;
+    let _txtMessage;
+    let _htmlMessage;
 
     /**
      *
@@ -39,10 +40,15 @@ const parametersModule = (function () {
     /**
      *
      * @param message
-     * @returns {setMessage}
+     * @returns {setTxtMessage}
      */
-    const setMessage = function (message) {
-        _message = message;
+    const setTxtMessage = function (message) {
+        _txtMessage = message;
+        return this;
+    };
+
+    const setHtmlMessage = function (message) {
+        _htmlMessage = message;
         return this;
     };
 
@@ -50,20 +56,20 @@ const parametersModule = (function () {
      *
      * @returns {{from: *, to: *, subject: *, message: *}}
      */
-    const getParams = function () {
-        return {
-            from: _from,
-            to: _to,
-            subject: _subject,
-            message: _message
-        };
-    };
+    const getParams = () => ({
+        from: _from,
+        to: _to,
+        subject: _subject,
+        message: _txtMessage,
+        messageHtml: _htmlMessage
+    });
 
     return {
         setFrom: setFrom,
         setTo: setTo,
         setSubject: setSubject,
-        setMessage: setMessage,
+        setTxtMessage: setTxtMessage,
+        setHtmlMessage: setHtmlMessage,
         getParams: getParams
     };
 
