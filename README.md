@@ -1,3 +1,6 @@
+# This repository is permanently archived.  Further development is not to be expected
+
+
 Needs the [serverless framework](https://serverless.com/) and an AWS account
 
 * don't forget to [set up your aws credentiasl](https://serverless.com/framework/docs/providers/aws/guide/credentials/)
